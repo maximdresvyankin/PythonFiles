@@ -29,6 +29,11 @@ class mysqlhelper(object):
         result = self.cursor.fetchall()
         return result
     
+    def mhsqlrun (self,sql):
+        self.cursor.execute(sql)
+        self.cursor.close()
+        self.commit()
+        
     def mhprintresult(self, dbtablename, dbwhere):
         for records in self.mhfetchrow(dbtablename, dbwhere):
             for i in range(0, len(records)):
