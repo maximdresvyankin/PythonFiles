@@ -47,4 +47,8 @@ elif (a == "3"):
     print("Please type username without \@")
     username = raw_input()
     sql = "SELECT * FROM virtual_users WHERE user=\"%s\""
-    print(db.mhfetchrow("virtual_users", "user=\"%s\"" % username))
+    a = db.mhfetchrow("virtual_users", "user=\"%s\"" % username)
+    fealdlist = ('id','maildomain_id','username','hash password','plainpassword')
+    print("Details for user "+a[0][2])
+    for i in range(0,len(a[0])):
+        print(fealdlist[i]+"=>"+str(a[0][i]))
