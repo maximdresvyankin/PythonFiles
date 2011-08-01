@@ -27,7 +27,8 @@ class mysqlhelper(object):
     
     def mhfetchrow(self, dbtablename, dbwhere):
         '''
-        Find one string from DB
+        Get string from DB using
+        sql = SELECT * FROM {tablename} WHERE {something}
         '''
         try:
             sql = "SELECT * FROM %s WHERE %s" % (dbtablename, dbwhere)
@@ -38,7 +39,20 @@ class mysqlhelper(object):
             print('Error {0} : {1}'.format(e.args[0], e.args[1]))
             sys.exit (1)
     
+    def mhprintresult(self, dbtablename, dbwhere):
+        '''
+        Print results of mhfetchrow
+        '''
+        for records in self.mhfetchrow(dbtablename, dbwhere):
+            for i in range(0, len(records)):
+                print "%s \t" % records[i], "|",
+            print "\n"
+            print "#" * 80
+    
     def mhsqlrun (self,sql):
+        '''
+        Run any SQL
+        '''
         try:
             self.cursor.execute(sql)
             self.cursor.close()
@@ -47,24 +61,22 @@ class mysqlhelper(object):
             print('Error {0} : {1}'.format(e.args[0], e.args[1]))
             sys.exit (1)
         
-    def mhprintresult(self, dbtablename, dbwhere):
-        for records in self.mhfetchrow(dbtablename, dbwhere):
-            for i in range(0, len(records)):
-                print "%s \t" % records[i], "|",
-            print "\n"
-            print "#" * 80
             
     def mhinsert(self, dbtable, dbtablerow, dbtablevalues):
+        """
+        Simple Insert in table
+        """
         try:
-            sql = """
-            INSERT INTO %s (%s) VALUES %s
-            """ % (dbtable, dbtablerow, tuple(dbtablevalues))
+            sql = "INSERT INTO %s (%s) VALUES %s" % (dbtable, dbtablerow, tuple(dbtablevalues))
             self.cursor.execute(sql)
         except MySQLdb.Error, e:
             print('Error {0} : {1}'.format(e.args[0], e.args[1]))
             sys.exit (1)
         
     def commit(self):
+        """
+        Commit changes
+        """
         try:
             self.connection.commit()
         except MySQLdb.Error, e:
