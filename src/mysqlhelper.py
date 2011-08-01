@@ -31,7 +31,6 @@ class mysqlhelper(object):
         '''
         try:
             sql = "SELECT * FROM %s WHERE %s" % (dbtablename, dbwhere)
-            print sql;
             self.cursor.execute(sql)
             result = self.cursor.fetchall()
             return result
@@ -57,12 +56,9 @@ class mysqlhelper(object):
             
     def mhinsert(self, dbtable, dbtablerow, dbtablevalues):
         try:
-            print dbtablerow
-            print tuple(dbtablevalues)
             sql = """
             INSERT INTO %s (%s) VALUES %s
             """ % (dbtable, dbtablerow, tuple(dbtablevalues))
-            print sql
             self.cursor.execute(sql)
         except MySQLdb.Error, e:
             print('Error {0} : {1}'.format(e.args[0], e.args[1]))
