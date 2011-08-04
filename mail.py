@@ -46,10 +46,10 @@ def mainprogramm():
         username = raw_input()
         sql = "SELECT * FROM virtual_users WHERE user=\"%s\""
         a = db.mhfetchrow("virtual_users", "user=\"%s\"" % username)
-        fealdlist = ('id', 'maildomain_id', 'username', 'hash password', 'plainpassword')
+        fealdlist = ('id', 'Mail Domain id', 'User Name', 'Hash Password', 'Plain Password')
         print("Details for user " + a[0][2])
         for i in range(0, len(a[0])):
-            print(fealdlist[i] + "=>" + str(a[0][i]))
+            print('{0:<25} => {1:<100}'.format(fealdlist[i],str(a[0][i])))
             
     print("Do you want another task to do? Y/N")
     again = str(raw_input()).lower()
