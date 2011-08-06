@@ -1,10 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-
 import sys
-import os.path
+import os
 import re
+from chardet.universaldetector import UniversalDetector 
 
+def detectcharset(filename):
+    detector = UniversalDetector()
+    detector.reset()
+    for line in file(filename, 'rb'):
+        detector.feed(line)
+        if detector.done: break
+    detector.close()
+    return(detector.result)
+    
 # def findall(path):
 if (len(sys.argv) > 1): path = sys.argv[1]
 else: path = raw_input("Введите директорию поиска \n")
@@ -28,9 +37,10 @@ lenoflist = len(listoffiles)
 for all in listoffiles:
 #     print "\"%s\" \t \"%s\"" % (all, preall + "utf.cue")
      try:
-         os.system("iconv -f CP1251 -t UTF-8 \"%s\" > \"%s\"" % (all, all[:-3] + "utf.cue"))
+         inpenc=detectcharset(all)['encoding'].upper()
+         os.system("iconv -f {0} -t UTF-8 \"{1}\" > \"{2}\"".format(inpenc,all,all[:-3] + "utf.cue"))
          counter+=100/lenoflist
-         print("{0:-3d} percents complete".format(counter))
+         sys.stdout.write("{0:-3d}%".format(counter))
      except os.error, e:
          print('Error {0} : {1}'.format(e.args[0], e.args[1]))
          sys.exit (1)
