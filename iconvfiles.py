@@ -3,7 +3,7 @@
 import sys
 import os
 import re
-from chardet.universaldetector import UniversalDetector 
+from chardet.universaldetector import UniversalDetector
 
 def detectcharset(filename):
     #Function for detect file charset
@@ -34,23 +34,20 @@ for names in os.walk(path):
 counter = 0
 lenoflist = len(listoffiles)
 for all in listoffiles:
-#     print "\"%s\" \t \"%s\"" % (all, preall + "utf.cue")
      try:
          inpenc = detectcharset(all)['encoding'].upper()
-         counter += 100 / lenoflist
-         sys.stdout.write("{0:-3d}%".format(counter))
+         counter += (100.0 / lenoflist)
+         sys.stdout.write("{0:-6.2f}% \t".format(counter))
          print all
-         try:
-             newfile = open(all[:-3] + "utf.cue", "r")
-             newfile.close()
-         except os.error, e:
-             print('Error {0} : {1}'.format(e.args[0], e.args[1]))
-             sys.exit (1)
-         os.system("iconv -f {0} -t UTF-8 \"{1}\" > \"{2}\"".format(inpenc, all, all[:-3] + "utf.cue"))
-     except os.error, e:
-         print('Error {0} : {1}'.format(e.args[0], e.args[1]))
+         os.system("iconv -f {0} -t UTF-8 \"{1}\" > \"{2}\"".format(inpenc, all, ".tmpfile"))
+         tempfile = open(".tmpfile", "r")
+         newfile = open(all[:-3] + "utf.cue", "w")
+         newfile.write(tempfile.read())
+         newfile.close()
+         tempfile.close()
+         os.system("rm -rf .tmpfile")
+     except :
+         print('Error!!!')
          sys.exit (1)
 print("Complete")
-print("#"*40)    
-#iconvpath=os.system('/usr/bin/iconv')
-#print iconvpath
+print("#"*40)
